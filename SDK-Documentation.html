@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TwitchChatBot SDK Documentation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <style>
+        [x-cloak] { display: none !important; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div x-data="{ activeTab: 'overview' }" class="min-h-screen">
+        <!-- Header -->
+        <header class="bg-purple-600 text-white shadow-lg">
+            <div class="container mx-auto px-6 py-8">
+                <h1 class="text-4xl font-bold">TwitchChatBot SDK</h1>
+                <p class="text-purple-200 mt-2">Create powerful plugins for your Twitch bot</p>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="bg-white shadow-sm border-b">
+            <div class="container mx-auto px-6">
+                <div class="flex space-x-8">
+                    <button @click="activeTab = 'overview'"
+                            :class="activeTab === 'overview' ? 'border-purple-500 text-purple-600' : 'border-transparent text-gray-500 hover:text-gray-700'"
+                            class="py-4 px-1 border-b-2 font-medium text-sm">
+                        Overview
+                    </button>
+                    <button @click="activeTab = 'quickstart'"
+                            :class="activeTab === 'quickstart' ? 'border-purple-500 text-purple-600' : 'border-transparent text-gray-500 hover:text-gray-700'"
+                            class="py-4 px-1 border-b-2 font-medium text-sm">
+                        Quick Start
+                    </button>
+                    <button @click="activeTab = 'api'"
+                            :class="activeTab === 'api' ? 'border-purple-500 text-purple-600' : 'border-transparent text-gray-500 hover:text-gray-700'"
+                            class="py-4 px-1 border-b-2 font-medium text-sm">
+                        API Reference
+                    </button>
+                    <button @click="activeTab = 'security'"
+                            :class="activeTab === 'security' ? 'border-purple-500 text-purple-600' : 'border-transparent text-gray-500 hover:text-gray-700'"
+                            class="py-4 px-1 border-b-2 font-medium text-sm">
+                        Security
+                    </button>
+                    <button @click="activeTab = 'examples'"
+                            :class="activeTab === 'examples' ? 'border-purple-500 text-purple-600' : 'border-transparent text-gray-500 hover:text-gray-700'"
+                            class="py-4 px-1 border-b-2 font-medium text-sm">
+                        Examples
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Content -->
+        <main class="container mx-auto px-6 py-8">
+            <!-- Overview Tab -->
+            <div x-show="activeTab === 'overview'" x-cloak>
+                <div class="max-w-4xl">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-6">Plugin System Overview</h2>
+
+                    <div class="grid md:grid-cols-2 gap-8 mb-8">
+                        <div class="bg-white rounded-lg shadow-md p-6">
+                            <h3 class="text-xl font-semibold mb-4 text-purple-600">🧩 What are Plugins?</h3>
+                            <p class="text-gray-600">Plugins are .NET assemblies that extend the bot's functionality by implementing the IBotPlugin interface. They can register commands, schedule tasks, and interact with Twitch chat.</p>
+                        </div>
+
+                        <div class="bg-white rounded-lg shadow-md p-6">
+                            <h3 class="text-xl font-semibold mb-4 text-purple-600">⚡ Features Available</h3>
+                            <ul class="text-gray-600 space-y-2">
+                                <li>• Register chat commands</li>
+                                <li>• Schedule recurring tasks</li>
+                                <li>• Permission system integration</li>
+                                <li>• Cooldown management</li>
+                                <li>• Send messages to chat</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="bg-blue-50 border-l-4 border-blue-400 p-6 mb-8">
+                        <h3 class="text-lg font-semibold text-blue-800 mb-2">Requirements</h3>
+                        <ul class="text-blue-700 space-y-1">
+                            <li>• .NET 8.0 or later</li>
+                            <li>• Visual Studio or VS Code</li>
+                            <li>• Reference to TwitchChatBot.exe</li>
+                            <li>• Implementation of IBotPlugin interface</li>
+                            <li>• <strong>plugin.json manifest file (required for security)</strong></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Start Tab -->
+            <div x-show="activeTab === 'quickstart'" x-cloak>
+                <div class="max-w-4xl">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-6">Quick Start Guide</h2>
+
+                    <div class="space-y-8">
+                        <div class="bg-white rounded-lg shadow-md p-6">
+                            <h3 class="text-xl font-semibold mb-4">1. Create New Project</h3>
+                            <div class="bg-gray-900 text-gray-100 p-4 rounded-md">
+                                <code>dotnet new classlib -n MyTwitchPlugin</code>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-lg shadow-md p-6">
+                            <h3 class="text-xl font-semibold mb-4">2. Add Project Reference</h3>
+                            <div class="bg-gray-900 text-gray-100 p-4 rounded-md">
+                                <code>&lt;ProjectReference Include="../TwitchChatBot/TwitchChatBot.vbproj" /&gt;</code>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-lg shadow-md p-6">
+                            <h3 class="text-xl font-semibold mb-4">3. Implement Plugin</h3>
+                            <div class="bg-gray-900 text-gray-100 p-4 rounded-md text-sm overflow-x-auto">
+                                <pre><code>public class MyPlugin : IBotPlugin
+{
+    public string Name => "My Awesome Plugin";
+    public string Version => "1.0.0";
+    public string Author => "Your Name";
+
+    private BotSDK sdk;
+
+    public void Initialize(BotSDK sdk)
+    {
+        this.sdk = sdk;
+        sdk.RegisterCommand("hello", new HelloCommand());
+        sdk.LogInfo(Name, "Plugin initialized!");
+    }
+
+    public void Shutdown()
+    {
+        sdk.LogInfo(Name, "Plugin shutting down...");
+    }
+}</code></pre>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-lg shadow-md p-6">
+                            <h3 class="text-xl font-semibold mb-4">4. Create plugin.json Manifest</h3>
+                            <p class="text-gray-600 mb-3">Required for security scanning (see Security tab for details):</p>
+                            <div class="bg-gray-900 text-gray-100 p-4 rounded-md text-sm overflow-x-auto">
+                                <pre><code>{
+  "name": "MyAwesomePlugin",
+  "version": "1.0.0",
+  "sdk": "1.0",
+  "capabilities": {
+    "network": false,
+    "disk": false,
+    "process": false
+  },
+  "commands": ["!hello"],
+  "allowedApis": []
+}</code></pre>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-lg shadow-md p-6">
+                            <h3 class="text-xl font-semibold mb-4">5. Deploy Plugin</h3>
+                            <ol class="list-decimal list-inside text-gray-600 space-y-2">
+                                <li>Build your project: <code class="bg-gray-200 px-2 py-1 rounded">dotnet build</code></li>
+                                <li>Create a subfolder in Plugins/ (e.g., Plugins/MyAwesomePlugin/)</li>
+                                <li>Copy both the .dll and plugin.json to the subfolder</li>
+                                <li>Restart the bot to load your plugin</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Security Tab -->
+            <div x-show="activeTab === 'security'" x-cloak>
+                <div class="max-w-6xl">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-6">Plugin Security System</h2>
+
+                    <div class="bg-red-50 border-l-4 border-red-400 p-6 mb-8">
+                        <h3 class="text-lg font-semibold text-red-800 mb-2">⚠️ Security Scanning Required</h3>
+                        <p class="text-red-700">All plugins are scanned before loading. Plugins that use restricted APIs without declaring proper capabilities will be rejected.</p>
+                    </div>
+
+                    <div class="space-y-8">
+                        <!-- plugin.json Manifest -->
+                        <div class="bg-white rounded-lg shadow-md p-6">
+                            <h3 class="text-2xl font-semibold mb-4 text-purple-600">📋 Required: plugin.json Manifest</h3>
+                            <p class="text-gray-600 mb-4">Every plugin MUST include a <code class="bg-gray-200 px-2 py-1 rounded">plugin.json</code> file in its folder. Without this manifest, the plugin will be rejected.</p>
+
+                            <div class="bg-gray-900 text-gray-100 p-4 rounded-md text-sm overflow-x-auto mb-4">
+                                <pre><code>{
+  "name": "MyAwesomePlugin",
+  "version": "1.0.0",
+  "sdk": "1.0",
+  "author": "Your Name",
+  "publisher": "Your Name",
+  "capabilities": {
+    "network": false,
+    "disk": false,
+    "process": false,
+    "apiHosting": false,
+    "reflectionEmit": false,
+    "dynamicLoading": false
+  },
+  "commands": ["!hello", "!world"],
+  "allowedApis": ["Newtonsoft.Json", "RestSharp"]
+}</code></pre>
+                            </div>
+
+                            <div class="bg-blue-50 p-4 rounded-lg">
+                                <h4 class="font-semibold text-blue-800 mb-2">Manifest Fields</h4>
+                                <ul class="text-blue-700 space-y-1 text-sm">
+                                    <li><strong>name:</strong> Plugin display name (string)</li>
+                                    <li><strong>version:</strong> Semantic version (e.g., "1.0.0")</li>
+                                    <li><strong>sdk:</strong> SDK version compatibility (string)</li>
+                                    <li><strong>author:</strong> Plugin author name (string)</li>
+                                    <li><strong>publisher:</strong> Publisher name - used for trusted publisher verification (string)</li>
+                                    <li><strong>capabilities:</strong> Permissions required (see below)</li>
+                                    <li><strong>commands:</strong> List of command names the plugin registers</li>
+                                    <li><strong>allowedApis:</strong> List of external API root namespaces your plugin uses (REQUIRED - see below)</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Allowed APIs Section -->
+                        <div class="bg-white rounded-lg shadow-md p-6">
+                            <h3 class="text-2xl font-semibold mb-4 text-purple-600">🌐 Required: API Declaration</h3>
+                            <p class="text-gray-600 mb-4">All plugins MUST declare any external APIs they call in the <code class="bg-gray-200 px-2 py-1 rounded">allowedApis</code> field. Plugins that call undeclared APIs will be <strong>automatically rejected</strong>.</p>
+
+                            <div class="bg-red-50 border-l-4 border-red-400 p-4 mb-4">
+                                <h4 class="font-semibold text-red-800 mb-2">⚠️ CRITICAL REQUIREMENT</h4>
+                                <p class="text-red-700 text-sm">If your plugin calls ANY external API (not System, Microsoft, TwitchChatBot, TwitchLib, or Spectre.Console), you MUST declare the root namespace in allowedApis or your plugin will be blocked.</p>
+                            </div>
+
+                            <h4 class="font-semibold mb-3">What to Declare:</h4>
+                            <div class="bg-gray-900 text-gray-100 p-4 rounded-md text-sm overflow-x-auto mb-4">
+                                <pre><code>// If you use Newtonsoft.Json:
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+
+// Declare in plugin.json:
+"allowedApis": ["Newtonsoft.Json"]
+
+// If you use RestSharp:
+using RestSharp;
+
+// Declare in plugin.json:
+"allowedApis": ["RestSharp"]
+
+// Multiple APIs:
+"allowedApis": ["Newtonsoft.Json", "RestSharp", "Serilog"]</code></pre>
+                            </div>
+
+                            <div class="bg-yellow-50 p-4 rounded-lg mb-4">
+                                <h4 class="font-semibold text-yellow-800 mb-2">What NOT to Declare:</h4>
+                                <p class="text-yellow-700 text-sm mb-2">You do NOT need to declare these built-in/bot APIs:</p>
+                                <ul class="text-yellow-700 text-sm space-y-1">
+                                    <li>• <strong>System.*</strong> - .NET Framework APIs</li>
+                                    <li>• <strong>Microsoft.*</strong> - Microsoft libraries</li>
+                                    <li>• <strong>TwitchChatBot</strong> - Bot SDK APIs</li>
+                                    <li>• <strong>TwitchLib</strong> - Twitch integration</li>
+                                    <li>• <strong>Spectre.Console</strong> - Console UI</li>
+                                </ul>
+                            </div>
+
+                            <div class="bg-blue-50 p-4 rounded-lg">
+                                <h4 class="font-semibold text-blue-800 mb-2">Example: Plugin Using External API</h4>
+                                <p class="text-blue-700 text-sm mb-2">If your plugin uses Newtonsoft.Json for JSON parsing:</p>
+                                <div class="bg-gray-900 text-gray-100 p-3 rounded-md text-sm mt-2 overflow-x-auto">
+                                    <pre><code>{
+  "name": "WeatherPlugin",
+  "version": "1.0.0",
+  "capabilities": {
+    "network": true
+  },
+  "allowedApis": ["Newtonsoft.Json", "RestSharp"],
+  "commands": ["!weather"]
+}</code></pre>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Trusted Publishers -->
+                        <div class="bg-white rounded-lg shadow-md p-6">
+                            <h3 class="text-2xl font-semibold mb-4 text-purple-600">👑 Trusted Publisher System</h3>
+                            <p class="text-gray-600 mb-4">Certain advanced capabilities are restricted to <strong>trusted publishers only</strong>. These publishers are verified by the bot administrator in <code class="bg-gray-200 px-2 py-1 rounded">trusted-publishers.json</code>.</p>
+
+                            <div class="bg-yellow-50 p-4 rounded-lg mb-4">
+                                <h4 class="font-semibold text-yellow-800 mb-2">Trusted-Only Capabilities:</h4>
+                                <ul class="text-yellow-700 space-y-1 text-sm">
+                                    <li><strong>apiHosting:</strong> Host HTTP servers, TCP listeners, or expose API endpoints</li>
+                                    <li><strong>reflectionEmit:</strong> Dynamic code generation via Reflection.Emit</li>
+                                    <li><strong>dynamicLoading:</strong> Load assemblies from byte arrays</li>
+                                </ul>
+                            </div>
+
+                            <div class="bg-red-50 p-4 rounded-lg">
+                                <p class="text-red-700 text-sm"><strong>⚠️ Important:</strong> Regular third-party plugins cannot use these capabilities. Only plugins with a publisher listed in the trusted publishers configuration can declare and use them.</p>
+                            </div>
+                        </div>
+
+                        <!-- Capabilities System -->
+                        <div class="bg-white rounded-lg shadow-md p-6">
+                            <h3 class="text-2xl font-semibold mb-4 text-purple-600">🔐 Capability System</h3>
+                            <p class="text-gray-600 mb-4">If your plugin uses restricted APIs, you MUST declare the required capability. Violations will result in rejection.</p>
+
+                            <div class="grid md:grid-cols-3 gap-6">
+                                <div class="border-l-4 border-blue-400 pl-4">
+                                    <h4 class="font-semibold text-lg mb-2">🌐 Network</h4>
+                                    <p class="text-sm text-gray-600 mb-2">Required for:</p>
+                                    <ul class="text-sm text-gray-700 space-y-1">
+                                        <li>• System.Net.*</li>
+                                        <li>• HttpClient</li>
+                                        <li>• WebSockets</li>
+                                        <li>• Socket operations</li>
+                                    </ul>
+                                </div>
+
+                                <div class="border-l-4 border-green-400 pl-4">
+                                    <h4 class="font-semibold text-lg mb-2">💾 Disk</h4>
+                                    <p class="text-sm text-gray-600 mb-2">Required for:</p>
+                                    <ul class="text-sm text-gray-700 space-y-1">
+                                        <li>• File I/O operations</li>
+                                        <li>• Directory access</li>
+                                        <li>• Registry access</li>
+                                        <li>• FileStream operations</li>
+                                    </ul>
+                                </div>
+
+                                <div class="border-l-4 border-yellow-400 pl-4">
+                                    <h4 class="font-semibold text-lg mb-2">⚙️ Process</h4>
+                                    <p class="text-sm text-gray-600 mb-2">Required for:</p>
+                                    <ul class="text-sm text-gray-700 space-y-1">
+                                        <li>• Starting processes</li>
+                                        <li>• Process manipulation</li>
+                                        <li>• P/Invoke calls</li>
+                                        <li>• Native interop</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Risk Scoring -->
+                        <div class="bg-white rounded-lg shadow-md p-6">
+                            <h3 class="text-2xl font-semibold mb-4 text-purple-600">🚨 Risk Assessment</h3>
+                            <p class="text-gray-600 mb-4">The security scanner analyzes your plugin and assigns a risk score based on detected patterns:</p>
+
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th class="px-4 py-2 text-left">Detection</th>
+                                            <th class="px-4 py-2 text-left">Risk Points</th>
+                                            <th class="px-4 py-2 text-left">Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-200">
+                                        <tr>
+                                            <td class="px-4 py-2 font-mono text-sm">Obfuscation</td>
+                                            <td class="px-4 py-2 text-sm text-red-600 font-semibold">+30</td>
+                                            <td class="px-4 py-2 text-sm">Random/obfuscated names detected</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="px-4 py-2 font-mono text-sm">P/Invoke</td>
+                                            <td class="px-4 py-2 text-sm text-red-600 font-semibold">+25</td>
+                                            <td class="px-4 py-2 text-sm">Native interop calls</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="px-4 py-2 font-mono text-sm">Network APIs</td>
+                                            <td class="px-4 py-2 text-sm text-orange-600 font-semibold">+20</td>
+                                            <td class="px-4 py-2 text-sm">Network communication</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="px-4 py-2 font-mono text-sm">Reflection/Emit</td>
+                                            <td class="px-4 py-2 text-sm text-orange-600 font-semibold">+20</td>
+                                            <td class="px-4 py-2 text-sm">Dynamic code generation</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="px-4 py-2 font-mono text-sm">Encrypted Strings</td>
+                                            <td class="px-4 py-2 text-sm text-orange-600 font-semibold">+20</td>
+                                            <td class="px-4 py-2 text-sm">High-entropy strings detected</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="px-4 py-2 font-mono text-sm">IO/Registry/Process</td>
+                                            <td class="px-4 py-2 text-sm text-yellow-600 font-semibold">+15</td>
+                                            <td class="px-4 py-2 text-sm">File/registry/process access</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="px-4 py-2 font-mono text-sm">Base64 Blobs</td>
+                                            <td class="px-4 py-2 text-sm text-yellow-600 font-semibold">+15</td>
+                                            <td class="px-4 py-2 text-sm">Large Base64 strings found</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="px-4 py-2 font-mono text-sm">Crypto APIs</td>
+                                            <td class="px-4 py-2 text-sm text-green-600 font-semibold">+10</td>
+                                            <td class="px-4 py-2 text-sm">Cryptography usage</td>
+                                        </tr>
+                                        <tr class="bg-red-50">
+                                            <td class="px-4 py-2 font-mono text-sm font-bold">Net+Base64+IO Combo</td>
+                                            <td class="px-4 py-2 text-sm text-red-600 font-bold">+50</td>
+                                            <td class="px-4 py-2 text-sm font-semibold">High-risk combination detected</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="grid md:grid-cols-3 gap-4 mt-6">
+                                <div class="bg-green-50 p-4 rounded-lg text-center">
+                                    <div class="text-2xl font-bold text-green-700">LOW</div>
+                                    <div class="text-sm text-green-600 mt-1">0-49 points</div>
+                                </div>
+                                <div class="bg-yellow-50 p-4 rounded-lg text-center">
+                                    <div class="text-2xl font-bold text-yellow-700">MEDIUM</div>
+                                    <div class="text-sm text-yellow-600 mt-1">50-99 points</div>
+                                </div>
+                                <div class="bg-red-50 p-4 rounded-lg text-center">
+                                    <div class="text-2xl font-bold text-red-700">HIGH</div>
+                                    <div class="text-sm text-red-600 mt-1">100+ points</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Rejection Reasons -->
+                        <div class="bg-white rounded-lg shadow-md p-6">
+                            <h3 class="text-2xl font-semibold mb-4 text-purple-600">❌ Common Rejection Reasons</h3>
+                            <div class="space-y-4">
+                                <div class="border-l-4 border-red-400 pl-4 py-2">
+                                    <h4 class="font-semibold text-red-800">Missing plugin.json</h4>
+                                    <p class="text-sm text-red-700">No manifest file found in plugin folder</p>
+                                </div>
+                                <div class="border-l-4 border-red-400 pl-4 py-2">
+                                    <h4 class="font-semibold text-red-800">Undeclared API Calls</h4>
+                                    <p class="text-sm text-red-700">Plugin calls external APIs without declaring them in allowedApis field (e.g., using Newtonsoft.Json without declaring it)</p>
+                                </div>
+                                <div class="border-l-4 border-red-400 pl-4 py-2">
+                                    <h4 class="font-semibold text-red-800">API Hosting Prohibited</h4>
+                                    <p class="text-sm text-red-700">Plugin attempts to host HTTP servers, open TCP listeners, or expose API endpoints (HttpListener, TcpListener, WebApplication)</p>
+                                </div>
+                                <div class="border-l-4 border-red-400 pl-4 py-2">
+                                    <h4 class="font-semibold text-red-800">Reflection.Emit Prohibited</h4>
+                                    <p class="text-sm text-red-700">Dynamic code generation via Reflection.Emit is not allowed</p>
+                                </div>
+                                <div class="border-l-4 border-red-400 pl-4 py-2">
+                                    <h4 class="font-semibold text-red-800">Assembly.Load(byte[]) Prohibited</h4>
+                                    <p class="text-sm text-red-700">Loading assemblies from byte arrays is blocked</p>
+                                </div>
+                                <div class="border-l-4 border-red-400 pl-4 py-2">
+                                    <h4 class="font-semibold text-red-800">Capability Violation</h4>
+                                    <p class="text-sm text-red-700">Plugin uses network/disk/process APIs without declaring capability</p>
+                                </div>
+                                <div class="border-l-4 border-red-400 pl-4 py-2">
+                                    <h4 class="font-semibold text-red-800">Scan Failure</h4>
+                                    <p class="text-sm text-red-700">Assembly could not be loaded or analyzed</p>
+                                </div>
+                                <div class="border-l-4 border-yellow-400 pl-4 py-2">
+                                    <h4 class="font-semibold text-yellow-800">Obfuscation Warning</h4>
+                                    <p class="text-sm text-yellow-700">Heavy obfuscation detected (not a rejection, but flags +30 risk points)</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Best Practices -->
+                        <div class="bg-white rounded-lg shadow-md p-6">
+                            <h3 class="text-2xl font-semibold mb-4 text-purple-600">✅ Security Best Practices</h3>
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div>
+                                    <h4 class="font-semibold text-green-600 mb-3">DO ✓</h4>
+                                    <ul class="space-y-2 text-sm">
+                                        <li class="flex items-start">
+                                            <span class="text-green-500 mr-2">✓</span>
+                                            <span>Always include plugin.json with your DLL</span>
+                                        </li>
+                                        <li class="flex items-start">
+                                            <span class="text-green-500 mr-2">✓</span>
+                                            <span>Declare all external APIs in allowedApis field</span>
+                                        </li>
+                                        <li class="flex items-start">
+                                            <span class="text-green-500 mr-2">✓</span>
+                                            <span>Declare all capabilities you need</span>
+                                        </li>
+                                        <li class="flex items-start">
+                                            <span class="text-green-500 mr-2">✓</span>
+                                            <span>Use clear, readable code and names</span>
+                                        </li>
+                                        <li class="flex items-start">
+                                            <span class="text-green-500 mr-2">✓</span>
+                                            <span>Minimize use of reflection and P/Invoke</span>
+                                        </li>
+                                        <li class="flex items-start">
+                                            <span class="text-green-500 mr-2">✓</span>
+                                            <span>Test loading your plugin before distribution</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-red-600 mb-3">DON'T ✗</h4>
+                                    <ul class="space-y-2 text-sm">
+                                        <li class="flex items-start">
+                                            <span class="text-red-500 mr-2">✗</span>
+                                            <span>Host HTTP servers, TCP listeners, or expose API endpoints</span>
+                                        </li>
+                                        <li class="flex items-start">
+                                            <span class="text-red-500 mr-2">✗</span>
+                                            <span>Use Reflection.Emit or dynamic code generation</span>
+                                        </li>
+                                        <li class="flex items-start">
+                                            <span class="text-red-500 mr-2">✗</span>
+                                            <span>Load assemblies from byte arrays</span>
+                                        </li>
+                                        <li class="flex items-start">
+                                            <span class="text-red-500 mr-2">✗</span>
+                                            <span>Obfuscate your plugin code</span>
+                                        </li>
+                                        <li class="flex items-start">
+                                            <span class="text-red-500 mr-2">✗</span>
+                                            <span>Embed large Base64 blobs unnecessarily</span>
+                                        </li>
+                                        <li class="flex items-start">
+                                            <span class="text-red-500 mr-2">✗</span>
+                                            <span>Use restricted APIs without capability declarations</span>
+                                        </li>
+                                        <li class="flex items-start">
+                                            <span class="text-red-500 mr-2">✗</span>
+                                            <span>Ship plugins without plugin.json</span>
+                                        </li>
+                                        <li class="flex items-start">
+                                            <span class="text-red-500 mr-2">✗</span>
+                                            <span>Call external APIs without declaring them in allowedApis</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Example Security-Compliant Plugin -->
+                        <div class="bg-white rounded-lg shadow-md p-6">
+                            <h3 class="text-2xl font-semibold mb-4 text-purple-600">📦 Complete Example: Plugin with Disk Access</h3>
+
+                            <h4 class="font-semibold mb-2">Folder Structure:</h4>
+                            <div class="bg-gray-900 text-gray-100 p-4 rounded-md text-sm mb-4">
+                                <pre><code>Plugins/
+└── DataLogger/
+    ├── plugin.json        ← Required manifest
+    └── DataLoggerPlugin.dll</code></pre>
+                            </div>
+
+                            <h4 class="font-semibold mb-2">plugin.json:</h4>
+                            <div class="bg-gray-900 text-gray-100 p-4 rounded-md text-sm mb-4">
+                                <pre><code>{
+  "name": "DataLogger",
+  "version": "1.0.0",
+  "sdk": "1.0",
+  "capabilities": {
+    "network": false,
+    "disk": true,          ← Declared because we use File.WriteAllText
+    "process": false
+  },
+  "commands": ["!log", "!viewlogs"],
+  "allowedApis": []        ← No external APIs used
+}</code></pre>
+                            </div>
+
+                            <h4 class="font-semibold mb-2">DataLoggerPlugin.cs:</h4>
+                            <div class="bg-gray-900 text-gray-100 p-4 rounded-md text-sm overflow-x-auto">
+                                <pre><code>public class DataLoggerPlugin : IBotPlugin
+{
+    public string Name => "DataLogger";
+    public string Version => "1.0.0";
+    public string Author => "YourName";
+
+    public void Initialize(BotSDK sdk)
+    {
+        sdk.RegisterCommand("log", new LogCommand());
+        sdk.LogInfo(Name, "DataLogger loaded with disk capability");
+    }
+
+    public void Shutdown() { }
+}
+
+public class LogCommand : ICommand
+{
+    public Role RequiredRole => Role.Moderator;
+    public int UserCooldownSeconds => 10;
+    public int GlobalCooldownSeconds => 0;
+
+    public void Execute(TwitchClient client, OnMessageReceivedArgs e, string[] args)
+    {
+        string message = string.Join(" ", args);
+        // This requires "disk": true in plugin.json
+        File.AppendAllText("logs.txt", $"{DateTime.Now}: {message}\n");
+        client.SendMessage(e.ChatMessage.Channel, "✓ Logged!");
+    }
+}</code></pre>
+                            </div>
+
+                            <div class="bg-green-50 p-4 rounded-lg mt-4">
+                                <p class="text-sm text-green-800"><strong>✓ This plugin will pass security scanning</strong> because it declares <code class="bg-green-200 px-2 py-1 rounded">disk: true</code> and includes a valid plugin.json manifest.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- API Reference Tab -->
+            <div x-show="activeTab === 'api'" x-cloak>
+                <div class="max-w-6xl">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-6">API Reference</h2>
+
+                    <div class="space-y-8">
+                        <!-- IBotPlugin Interface -->
+                        <div class="bg-white rounded-lg shadow-md p-6">
+                            <h3 class="text-2xl font-semibold mb-4 text-purple-600">IBotPlugin Interface</h3>
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th class="px-4 py-2 text-left">Property/Method</th>
+                                            <th class="px-4 py-2 text-left">Type</th>
+                                            <th class="px-4 py-2 text-left">Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-200">
+                                        <tr>
+                                            <td class="px-4 py-2 font-mono text-sm">Name</td>
+                                            <td class="px-4 py-2 text-sm">string</td>
+                                            <td class="px-4 py-2 text-sm">Plugin display name</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="px-4 py-2 font-mono text-sm">Version</td>
+                                            <td class="px-4 py-2 text-sm">string</td>
+                                            <td class="px-4 py-2 text-sm">Plugin version</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="px-4 py-2 font-mono text-sm">Author</td>
+                                            <td class="px-4 py-2 text-sm">string</td>
+                                            <td class="px-4 py-2 text-sm">Plugin author</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="px-4 py-2 font-mono text-sm">Initialize(sdk)</td>
+                                            <td class="px-4 py-2 text-sm">void</td>
+                                            <td class="px-4 py-2 text-sm">Called when plugin loads</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="px-4 py-2 font-mono text-sm">Shutdown()</td>
+                                            <td class="px-4 py-2 text-sm">void</td>
+                                            <td class="px-4 py-2 text-sm">Called when bot shuts down</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- BotSDK Methods -->
+                        <div class="bg-white rounded-lg shadow-md p-6">
+                            <h3 class="text-2xl font-semibold mb-4 text-purple-600">BotSDK Methods</h3>
+                            <div class="grid lg:grid-cols-2 gap-6">
+                                <div>
+                                    <h4 class="font-semibold text-lg mb-3">Command Management</h4>
+                                    <div class="space-y-3">
+                                        <div class="border-l-4 border-blue-400 pl-4">
+                                            <code class="text-sm font-mono">RegisterCommand(name, command)</code>
+                                            <p class="text-sm text-gray-600 mt-1">Register a new chat command</p>
+                                        </div>
+                                        <div class="border-l-4 border-red-400 pl-4">
+                                            <code class="text-sm font-mono">UnregisterCommand(name)</code>
+                                            <p class="text-sm text-gray-600 mt-1">Remove a registered command</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <h4 class="font-semibold text-lg mb-3">Scheduling</h4>
+                                    <div class="space-y-3">
+                                        <div class="border-l-4 border-green-400 pl-4">
+                                            <code class="text-sm font-mono">ScheduleJob(name, minutes, command)</code>
+                                            <p class="text-sm text-gray-600 mt-1">Schedule recurring task</p>
+                                        </div>
+                                        <div class="border-l-4 border-yellow-400 pl-4">
+                                            <code class="text-sm font-mono">RemoveScheduledJob(name)</code>
+                                            <p class="text-sm text-gray-600 mt-1">Remove scheduled task</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <h4 class="font-semibold text-lg mb-3">Messaging</h4>
+                                    <div class="space-y-3">
+                                        <div class="border-l-4 border-purple-400 pl-4">
+                                            <code class="text-sm font-mono">SendMessage(message)</code>
+                                            <p class="text-sm text-gray-600 mt-1">Send message to chat</p>
+                                        </div>
+                                        <div class="border-l-4 border-indigo-400 pl-4">
+                                            <code class="text-sm font-mono">LogInfo(plugin, message)</code>
+                                            <p class="text-sm text-gray-600 mt-1">Log informational message</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <h4 class="font-semibold text-lg mb-3">Properties</h4>
+                                    <div class="space-y-3">
+                                        <div class="border-l-4 border-pink-400 pl-4">
+                                            <code class="text-sm font-mono">Permissions</code>
+                                            <p class="text-sm text-gray-600 mt-1">Access permission service</p>
+                                        </div>
+                                        <div class="border-l-4 border-teal-400 pl-4">
+                                            <code class="text-sm font-mono">Cooldowns</code>
+                                            <p class="text-sm text-gray-600 mt-1">Access cooldown service</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Role Enum -->
+                        <div class="bg-white rounded-lg shadow-md p-6">
+                            <h3 class="text-2xl font-semibold mb-4 text-purple-600">Role Hierarchy</h3>
+                            <div class="grid md:grid-cols-5 gap-4">
+                                <div class="text-center p-4 bg-gray-50 rounded-lg">
+                                    <div class="text-2xl mb-2">👤</div>
+                                    <div class="font-semibold">Everyone</div>
+                                </div>
+                                <div class="text-center p-4 bg-blue-50 rounded-lg">
+                                    <div class="text-2xl mb-2">⭐</div>
+                                    <div class="font-semibold">Subscriber</div>
+                                </div>
+                                <div class="text-center p-4 bg-purple-50 rounded-lg">
+                                    <div class="text-2xl mb-2">💎</div>
+                                    <div class="font-semibold">VIP</div>
+                                </div>
+                                <div class="text-center p-4 bg-green-50 rounded-lg">
+                                    <div class="text-2xl mb-2">🔨</div>
+                                    <div class="font-semibold">Moderator</div>
+                                </div>
+                                <div class="text-center p-4 bg-yellow-50 rounded-lg">
+                                    <div class="text-2xl mb-2">👑</div>
+                                    <div class="font-semibold">Broadcaster</div>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-600 mt-4">Higher roles inherit permissions from lower roles</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Examples Tab -->
+            <div x-show="activeTab === 'examples'" x-cloak>
+                <div class="max-w-4xl">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-6">Plugin Examples</h2>
+
+                    <div class="space-y-8">
+                        <!-- Simple Command Example -->
+                        <div class="bg-white rounded-lg shadow-md p-6">
+                            <h3 class="text-xl font-semibold mb-4">💬 Simple Chat Command</h3>
+                            <div class="bg-gray-900 text-gray-100 p-4 rounded-md text-sm overflow-x-auto">
+                                <pre><code>public class HelloCommand : ICommand
+{
+    public Role RequiredRole => Role.Everyone;
+    public int UserCooldownSeconds => 5;
+    public int GlobalCooldownSeconds => 0;
+
+    public void Execute(TwitchClient client, OnMessageReceivedArgs e, string[] args)
+    {
+        string username = e.ChatMessage.DisplayName;
+        client.SendMessage(e.ChatMessage.Channel, $"Hello {username}! 👋");
+    }
+}</code></pre>
+                            </div>
+                        </div>
+
+                        <!-- Scheduled Task Example -->
+                        <div class="bg-white rounded-lg shadow-md p-6">
+                            <h3 class="text-xl font-semibold mb-4">⏰ Scheduled Task</h3>
+                            <div class="bg-gray-900 text-gray-100 p-4 rounded-md text-sm overflow-x-auto">
+                                <pre><code>public class HourlyReminder : IScheduledCommand
+{
+    public void Execute(TwitchClient client, string channel)
+    {
+        client.SendMessage(channel, "⏰ Don't forget to stay hydrated!");
+    }
+}
+
+// In your plugin Initialize method:
+sdk.ScheduleJob("HydrationReminder", 60, new HourlyReminder());</code></pre>
+                            </div>
+                        </div>
+
+                        <!-- Full Plugin Example -->
+                        <div class="bg-white rounded-lg shadow-md p-6">
+                            <h3 class="text-xl font-semibold mb-4">🎮 Complete Game Plugin</h3>
+                            <div class="bg-gray-900 text-gray-100 p-4 rounded-md text-sm overflow-x-auto">
+                                <pre><code>public class DiceGamePlugin : IBotPlugin
+{
+    public string Name => "Dice Game";
+    public string Version => "1.0.0";
+    public string Author => "GameDev";
+
+    private BotSDK sdk;
+
+    public void Initialize(BotSDK sdk)
+    {
+        this.sdk = sdk;
+
+        // Register commands
+        sdk.RegisterCommand("roll", new RollDiceCommand());
+        sdk.RegisterCommand("leaderboard", new LeaderboardCommand());
+
+        // Schedule daily reset
+        sdk.ScheduleJob("DailyReset", 1440, new DailyResetCommand());
+
+        sdk.LogInfo(Name, "Dice game loaded!");
+    }
+
+    public void Shutdown()
+    {
+        sdk.LogInfo(Name, "Saving game data...");
+        // Save any persistent data here
+    }
+}</code></pre>
+                            </div>
+                        </div>
+
+                        <!-- Permission Example -->
+                        <div class="bg-white rounded-lg shadow-md p-6">
+                            <h3 class="text-xl font-semibold mb-4">🔐 Using Permissions</h3>
+                            <div class="bg-gray-900 text-gray-100 p-4 rounded-md text-sm overflow-x-auto">
+                                <pre><code>public class ModOnlyCommand : ICommand
+{
+    public Role RequiredRole => Role.Moderator;  // Mods and broadcaster only
+    public int UserCooldownSeconds => 0;
+    public int GlobalCooldownSeconds => 30;      // 30 second global cooldown
+
+    public void Execute(TwitchClient client, OnMessageReceivedArgs e, string[] args)
+    {
+        // This command can only be used by moderators and broadcaster
+        client.SendMessage(e.ChatMessage.Channel, "🔨 Moderator command executed!");
+    }
+}</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-gray-800 text-white py-8 mt-16">
+            <div class="container mx-auto px-6 text-center">
+                <p>&copy; 2024 TwitchChatBot SDK. Build amazing Twitch bot plugins! 🚀</p>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

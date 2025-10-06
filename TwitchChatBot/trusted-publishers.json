@@ -1,0 +1,9 @@
+{
+  "trustedPublishers": [
+    "SilentNades",
+    "TwitchChatBot Official"
+  ],
+  "allowTrustedPublishersApiHosting": true,
+  "allowTrustedPublishersReflectionEmit": true,
+  "allowTrustedPublishersDynamicLoading": true
+}
